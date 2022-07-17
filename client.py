@@ -13,7 +13,7 @@ ssl_connection.send("Test".encode())
 
 time.sleep(5)
 
-print(ssl_connection.recv(1024))
+print("From server:", ssl_connection.recv(1024).decode())
 
 ssl_connection.send("QUIT".encode())
 

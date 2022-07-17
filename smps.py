@@ -14,7 +14,7 @@ class Handler(StreamRequestHandler):
             while True:
                 input = self.request.recv(1024)
                 input = input.decode("utf-8")
-                print("Received: ", input)
+                print("From client:", input)
                 self.wfile.write("Message accepted".encode())
                 time.sleep(2)
                 if input.lower() == "quit":
