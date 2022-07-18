@@ -11,3 +11,6 @@ key.
 
 Author Morten W. Petersen, <morphex@gmail.com>
 
+Some blog posts about this project:
+
+https://blogologue.com/search?category=1658082823X26
