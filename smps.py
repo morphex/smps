@@ -19,6 +19,8 @@ class SimpleMessageStorage:
     def add_message(self, message):
         self._acquire_lock()
         self.messages.append((time.time(), message))
+        # Miniscule sleep period to ensure unique timestamps
+        time.sleep(0.00001)
         self._release_lock()
 
     def _acquire_lock(self):
