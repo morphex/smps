@@ -27,7 +27,7 @@ class SimpleMessageStorage:
         self._lock.acquire()
 
     def _release_lock(self):
-        """Acquires a lock on the message database."""
+        """Releases the lock on the message database."""
         print("Releasing message database")
         self._lock.release()
 
