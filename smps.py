@@ -39,9 +39,9 @@ class SimpleMessageStorage:
         for timestamp, message in self.messages:
             if timestamp < (time.time() + self.expiry):
                 new_messages.append((timestamp, message))
-        self.messages = new_messages
+        self.messages = list(new_messages)
         self._release_lock()
-        return self.messages
+        return new_messages
 
 message_storage = SimpleMessageStorage()
 
