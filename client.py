@@ -14,7 +14,7 @@ class Client:
         connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         connection.settimeout(10)
         ssl_connection = ssl.wrap_socket(connection)
-        ssl_connection.connect(("localhost", 3322))
+        ssl_connection.connect((self.hostname, self.port))
         self._connection = ssl_connection
 
     def send(self, message):
