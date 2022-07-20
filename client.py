@@ -4,31 +4,52 @@ import socket
 import ssl
 import time
 
-connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-connection.settimeout(10)
+SLEEP_TIME = 0
 
-ssl_connection = ssl.wrap_socket(connection)
-ssl_connection.connect(("localhost", 3322))
-ssl_connection.send("Test".encode())
+class Client:
 
-time.sleep(5)
+    def __init__(self, hostname, port):
+        self.hostname = hostname
+        self.port = port
+        connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        connection.settimeout(10)
+        ssl_connection = ssl.wrap_socket(connection)
+        ssl_connection.connect(("localhost", 3322))
+        self._connection = ssl_connection
 
-print("From server:", ssl_connection.recv(1024).decode())
+    def send(self, message):
+        """Sends a message and returns the reply."""
+        self._connection.send(message.encode())
+        return self.receive()
 
-time.sleep(2)
+    def receive(self, size=1024):
+        """Receives a transmission."""
+        return self._connection.recv(size).decode()
 
-ssl_connection.send("list".encode())
+    def quit(self):
+        self._connection.close()
 
-time.sleep(5)
+client = Client("localhost", 3322)
 
-messages = ssl_connection.recv(1024).decode()
+reply = client.send("Test")
+
+time.sleep(SLEEP_TIME)
+
+print("From server:", reply)
+
+time.sleep(SLEEP_TIME)
+
+reply = client.send("list")
+
+time.sleep(SLEEP_TIME)
+
+print("From server:", reply)
+
+messages = client.receive()
 print("From server:", messages)
 
-messages = ssl_connection.recv(1024).decode()
-print("From server:", messages)
+reply = client.send("QUIT")
 
-ssl_connection.send("QUIT".encode())
+time.sleep(SLEEP_TIME)
 
-time.sleep(5)
-
-ssl_connection.close()
+client.quit()

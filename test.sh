@@ -8,7 +8,7 @@ fi
 ./smps.py &
 smps_pid=$!
 echo SMPS running at pid $smps_pid
-sleep 5
+sleep 2
 ./client.py
 
 echo "Test complete"
