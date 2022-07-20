@@ -7,6 +7,7 @@ import socket
 import time
 import sys
 import threading
+from sdt import DEBUG_PRINT
 
 class SimpleMessageStorage:
 
@@ -25,12 +26,12 @@ class SimpleMessageStorage:
 
     def _acquire_lock(self):
         """Acquires a lock on the message database."""
-        print("Locking message database")
+        DEBUG_PRINT("Locking message database")
         self._lock.acquire()
 
     def _release_lock(self):
         """Releases the lock on the message database."""
-        print("Releasing message database")
+        DEBUG_PRINT("Releasing message database")
         self._lock.release()
 
     def get_messages(self):
@@ -55,21 +56,20 @@ class Handler(StreamRequestHandler):
             while True:
                 input = self.request.recv(1024)
                 input = input.decode("utf-8")
-                print("From client:", input)
+                DEBUG_PRINT("From client:", input)
                 message_storage.add_message(input)
                 self.wfile.write("Message accepted".encode())
-                time.sleep(2)
                 if input.lower().strip() == "list":
-                   print("Listing messages")
+                   DEBUG_PRINT("Listing messages")
                    messages = ""
                    for timestamp, message in message_storage.get_messages():
                        messages += "%f,%s\n" % (timestamp, message)
                    self.wfile.write(messages.encode())
                 if input.lower().strip() == "quit":
-                   print("Exiting")
+                   DEBUG_PRINT("Exiting")
                    self.server.shutdown()
         except Exception as instance:
-            print("Exception", type(instance), instance.args, instance)
+            DEBUG_PRINT("Exception", type(instance), instance.args, instance)
 
 class Server(ThreadingMixIn, TCPServer):
 

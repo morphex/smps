@@ -3,6 +3,8 @@
 import socket
 import ssl
 import time
+from sdt import DEBUG_PRINT
+import _thread
 
 SLEEP_TIME = 0
 
@@ -29,27 +31,31 @@ class Client:
     def quit(self):
         self._connection.close()
 
-client = Client("localhost", 3322)
+def _run_client_test():
+    client = Client("localhost", 3322)
+    reply = client.send("Test")
+    time.sleep(SLEEP_TIME)
+    DEBUG_PRINT("From server:", reply)
+    time.sleep(SLEEP_TIME)
+    reply = client.send("list")
+    time.sleep(SLEEP_TIME)
+    DEBUG_PRINT("From server:", reply)
+    messages = client.receive()
+    DEBUG_PRINT("From server:", messages)
+    reply = client.send("QUIT")
+    time.sleep(SLEEP_TIME)
+    client.quit()
 
-reply = client.send("Test")
+def run_client_test():
+    try:
+        _run_client_test()
+    except Exception as exception:
+        print("Exception", type(exception), exception.args)
 
-time.sleep(SLEEP_TIME)
+run_client_test()
 
-print("From server:", reply)
-
-time.sleep(SLEEP_TIME)
-
-reply = client.send("list")
-
-time.sleep(SLEEP_TIME)
-
-print("From server:", reply)
-
-messages = client.receive()
-print("From server:", messages)
-
-reply = client.send("QUIT")
-
-time.sleep(SLEEP_TIME)
-
-client.quit()
+print("Starting threads: ")
+for x in range(100):
+    print(".", end="")
+    _thread.start_new_thread(run_client_test, ())
+print()
