@@ -72,11 +72,14 @@ print("Starting threads: ")
 for x in range(number_of_test_threads):
     print("%i," % x, end="")
     threads.append(_thread.start_new_thread(run_client_test, ()))
-#print(threads)
+count = 0
 while True:
-    if len(threads) == finished:
+    if len(threads) <= finished:
         break
     time.sleep(0.01)
+    count += 1
+    if not count % 100:
+        print("Loop..", len(threads), finished)
 print()
 print("Finished testing..")
 run_client_test(quit=1)

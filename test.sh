@@ -10,7 +10,9 @@ echo "Start time `date`"
 smps_pid=$!
 echo SMPS running at pid $smps_pid
 sleep 2
-./client.py $1
+./client.py $1 &> client.log
 
 echo "Test complete"
 echo "End time `date`"
+echo "Killing SMPS.."
+kill -9 $smps_pid
