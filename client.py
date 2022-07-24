@@ -37,7 +37,9 @@ class Client:
     def quit(self):
         self._connection.close()
 
-def _run_client_test():
+finished = 0
+
+def _run_client_test(quit=0):
     client = Client("localhost", 3322)
     reply = client.send("Test")
     time.sleep(SLEEP_TIME)
@@ -48,20 +50,33 @@ def _run_client_test():
     DEBUG_PRINT("From server:", reply)
     messages = client.receive()
     DEBUG_PRINT("From server:", messages)
-    reply = client.send("QUIT")
-    time.sleep(SLEEP_TIME)
-    client.quit()
+    if quit:
+        reply = client.send("QUIT")
+        time.sleep(SLEEP_TIME)
+        client.quit()
+    global finished
+    finished += 1
 
-def run_client_test():
+def run_client_test(quit=0):
     try:
-        _run_client_test()
+        _run_client_test(quit=quit)
     except Exception as exception:
         print("Exception", type(exception), exception.args)
+        global finished
+        finished += 1
 
 run_client_test()
 
+threads = []
 print("Starting threads: ")
 for x in range(number_of_test_threads):
     print("%i," % x, end="")
-    _thread.start_new_thread(run_client_test, ())
+    threads.append(_thread.start_new_thread(run_client_test, ()))
+#print(threads)
+while True:
+    if len(threads) == finished:
+        break
+    time.sleep(0.01)
 print()
+print("Finished testing..")
+run_client_test(quit=1)
