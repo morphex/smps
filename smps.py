@@ -74,6 +74,7 @@ class Handler(StreamRequestHandler):
 class Server(ThreadingMixIn, TCPServer):
 
     daemon_threads = True
+    request_queue_size = 1000
 
     def __init__(self, address=("localhost", 3322), bind_and_activate=True):
         super().__init__(address, Handler, False)

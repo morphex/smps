@@ -5,8 +5,14 @@ import ssl
 import time
 from sdt import DEBUG_PRINT
 import _thread
+import sys
 
 SLEEP_TIME = 0
+
+try:
+    number_of_test_threads = int(sys.argv[1])
+except IndexError:
+    number_of_test_threads = 100
 
 class Client:
 
@@ -55,7 +61,7 @@ def run_client_test():
 run_client_test()
 
 print("Starting threads: ")
-for x in range(100):
-    print(".", end="")
+for x in range(number_of_test_threads):
+    print("%i," % x, end="")
     _thread.start_new_thread(run_client_test, ())
 print()

@@ -5,10 +5,10 @@ if [[ ! -f ./ssl/cert.pem ]]; then
     ./ssl.sh
 fi
 
-./smps.py &
+./smps.py &>smps.log&
 smps_pid=$!
 echo SMPS running at pid $smps_pid
 sleep 2
-./client.py
+./client.py $1
 
 echo "Test complete"
